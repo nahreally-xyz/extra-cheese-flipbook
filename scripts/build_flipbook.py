@@ -171,7 +171,9 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     .nav-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 36px; height: 56px; font-size: 0.9rem; z-index: 10;
+      background: rgba(0,0,0,0.28); color: #fff;
     }
+    .nav-btn:hover:not(:disabled) { background: rgba(0,0,0,0.45); color: #fff; }
     #prevBtn { left: 4px; }
     #nextBtn { right: 4px; }
   }
