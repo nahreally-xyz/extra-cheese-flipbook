@@ -161,6 +161,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   .thumb.active { border-color: #f0e040; opacity: 1; }
   .thumb img { width: 28px; display: block; }
   @media (max-width: 600px) {
+    #thumb-strip { display: none; }
     #header { padding: 28px 16px 6px; }
     #header h1 { font-size: 1.5rem; letter-spacing: 2px; }
     #header .byline { font-size: 0.85rem; }
