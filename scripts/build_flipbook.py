@@ -237,8 +237,12 @@ function render() {
     img.src = 'data:image/jpeg;base64,' + page.src; img.alt = page.label;
     pf.appendChild(img); book.appendChild(pf);
 
+    const atEnd = currentPage >= TOTAL_PAGES - 1;
     document.getElementById('prevBtn').disabled = currentPage === 0;
-    document.getElementById('nextBtn').disabled = currentPage >= TOTAL_PAGES - 1;
+    document.getElementById('nextBtn').disabled = false;
+    document.getElementById('nextBtn').innerHTML = atEnd ? '↺' : '&#9654;';
+    document.getElementById('nextBtn').style.fontSize = atEnd ? '1.1rem' : '0.9rem';
+    document.getElementById('nextBtn').onclick = atEnd ? () => { currentPage = 0; currentSpread = 0; render(); } : () => navigate(1);
     document.getElementById('progress-bar-fill').style.width = ((currentPage + 1) / TOTAL_PAGES * 100) + '%';
     document.getElementById('progress-label').textContent = (currentPage + 1) + ' / ' + TOTAL_PAGES;
 
@@ -263,8 +267,11 @@ function render() {
     ri.src = 'data:image/jpeg;base64,' + right.src; ri.alt = right.label;
     rf.appendChild(ri); book.appendChild(rf);
 
+    const atEnd = currentSpread >= TOTAL_SPREADS - 1;
     document.getElementById('prevBtn').disabled = currentSpread === 0;
-    document.getElementById('nextBtn').disabled = currentSpread >= TOTAL_SPREADS - 1;
+    document.getElementById('nextBtn').disabled = false;
+    document.getElementById('nextBtn').innerHTML = atEnd ? '↺' : '&#9654;';
+    document.getElementById('nextBtn').onclick = atEnd ? () => { currentSpread = 0; currentPage = 0; render(); } : () => navigate(1);
     document.getElementById('progress-bar-fill').style.width = ((currentSpread + 1) / TOTAL_SPREADS * 100) + '%';
     document.getElementById('progress-label').textContent = (currentSpread + 1) + ' / ' + TOTAL_SPREADS;
 
