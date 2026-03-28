@@ -1,0 +1,18 @@
+# Source PDFs (large binaries — store locally, not needed in repo)
+assets/source-pdfs/
+
+# Generated files — reproducible from source PDFs via rebuild.sh
+pages/
+
+# Local output — use docs/ for GitHub Pages
+output/
+
+# docs/index.html is intentionally tracked for GitHub Pages
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store

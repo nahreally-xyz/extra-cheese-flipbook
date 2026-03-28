@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip3 install:*)",
+      "Bash(bash scripts/rebuild.sh)",
+      "Bash(brew install:*)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Bash(python3 -c \"import subprocess; result = subprocess.run\\([''find'', ''/opt'', ''/usr/local'', ''/Applications'', ''-name'', ''pdftoppm'', ''-type'', ''f''], capture_output=True, text=True, timeout=10\\); print\\(result.stdout[:500]\\)\")",
+      "Bash(python3 -c \"import fitz; print\\(fitz.__version__\\)\")",
+      "Bash(open \"/Users/mikejudd/Desktop/EXTRA CHEESE/Lyric Booklet/FINAL LYRIC BOOKLET/extra-cheese-flipbook/output/extra_cheese_flipbook.html\")",
+      "Bash(python3 scripts/build_flipbook.py)",
+      "Bash(open output/extra_cheese_flipbook.html)",
+      "Bash(fc-list)",
+      "WebFetch(domain:5oclockshadowboxers.bandcamp.com)",
+      "WebFetch(domain:threedollarpistol.com)",
+      "WebFetch(domain:bandcamp.com)",
+      "Bash(gh auth:*)",
+      "Bash(git --version)",
+      "Bash(du -sh \"/Users/mikejudd/Desktop/EXTRA CHEESE/Lyric Booklet/FINAL LYRIC BOOKLET/extra-cheese-flipbook/assets/source-pdfs/\"*)"
+    ]
+  }
+}
