@@ -222,10 +222,27 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   </div>
   <div style="margin-bottom:48px;">
     <p style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;font-size:0.75rem;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">SUBSCRIBE TO THE NAHREALLY EMAIL LIST</p>
-    <form action="https://nahreally.substack.com/api/v1/free" method="post" target="_blank" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-      <input type="email" name="email" placeholder="your@email.com" required style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;font-size:0.85rem;padding:9px 14px;border:1px solid #555;border-radius:4px;background:#2e2e2e;color:#eee;outline:none;width:220px;">
-      <button type="submit" style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;font-size:0.8rem;font-weight:700;padding:9px 20px;background:#ffe033;color:#111;border:none;border-radius:4px;cursor:pointer;letter-spacing:1px;">SUBSCRIBE</button>
+    <form id="substack-form" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+      <input type="email" id="substack-email" placeholder="your@email.com" required style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;font-size:0.85rem;padding:9px 14px;border:1px solid #555;border-radius:4px;background:#2e2e2e;color:#eee;outline:none;width:220px;">
+      <button type="submit" id="substack-btn" style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;font-size:0.8rem;font-weight:700;padding:9px 20px;background:#ffe033;color:#111;border:none;border-radius:4px;cursor:pointer;letter-spacing:1px;">SUBSCRIBE</button>
     </form>
+    <script>
+      document.getElementById('substack-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var email = document.getElementById('substack-email').value;
+        var btn = document.getElementById('substack-btn');
+        fetch('https://nahreally.substack.com/api/v1/free', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({email: email})
+        }).catch(function(){});
+        btn.textContent = '✓';
+        btn.style.background = '#4caf50';
+        btn.style.color = '#fff';
+        btn.disabled = true;
+        document.getElementById('substack-email').disabled = true;
+      });
+    </script>
   </div>
 </div>
 <div id="progress-wrap">
