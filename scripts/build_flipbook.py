@@ -214,10 +214,9 @@ function render() {
     document.getElementById('prevBtn').disabled = currentPage === 0;
     document.getElementById('nextBtn').disabled = currentPage >= TOTAL_PAGES - 1;
 
-    const spreadIdx = Math.floor(currentPage / 2);
     document.querySelectorAll('.thumb').forEach((t, i) =>
-      t.classList.toggle('active', i === spreadIdx));
-    const at = document.querySelectorAll('.thumb')[spreadIdx];
+      t.classList.toggle('active', i === currentPage));
+    const at = document.querySelectorAll('.thumb')[currentPage];
     if (at) at.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
   } else {
@@ -259,17 +258,29 @@ function navigate(dir) {
 
 function buildThumbs() {
   const strip = document.getElementById('thumb-strip');
-  for (let i = 0; i < TOTAL_SPREADS; i++) {
-    const [l, r] = [PAGES[i * 2], PAGES[i * 2 + 1]];
-    const thumb = document.createElement('div');
-    thumb.className = 'thumb' + (i === 0 ? ' active' : '');
-    const li = document.createElement('img'); li.src = 'data:image/jpeg;base64,' + l.src;
-    const ri = document.createElement('img'); ri.src = 'data:image/jpeg;base64,' + r.src;
-    thumb.appendChild(li); thumb.appendChild(ri);
-    thumb.onclick = () => {
-      currentSpread = i; currentPage = i * 2; render();
-    };
-    strip.appendChild(thumb);
+  strip.innerHTML = '';
+  if (isMobile()) {
+    // One thumbnail per page
+    for (let i = 0; i < TOTAL_PAGES; i++) {
+      const thumb = document.createElement('div');
+      thumb.className = 'thumb' + (i === 0 ? ' active' : '');
+      const img = document.createElement('img'); img.src = 'data:image/jpeg;base64,' + PAGES[i].src;
+      thumb.appendChild(img);
+      thumb.onclick = () => { currentPage = i; currentSpread = Math.floor(i / 2); render(); };
+      strip.appendChild(thumb);
+    }
+  } else {
+    // One thumbnail per spread
+    for (let i = 0; i < TOTAL_SPREADS; i++) {
+      const [l, r] = [PAGES[i * 2], PAGES[i * 2 + 1]];
+      const thumb = document.createElement('div');
+      thumb.className = 'thumb' + (i === 0 ? ' active' : '');
+      const li = document.createElement('img'); li.src = 'data:image/jpeg;base64,' + l.src;
+      const ri = document.createElement('img'); ri.src = 'data:image/jpeg;base64,' + r.src;
+      thumb.appendChild(li); thumb.appendChild(ri);
+      thumb.onclick = () => { currentSpread = i; currentPage = i * 2; render(); };
+      strip.appendChild(thumb);
+    }
   }
 }
 
@@ -286,7 +297,12 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
 });
 
-window.addEventListener('resize', render);
+let lastMobile = isMobile();
+window.addEventListener('resize', () => {
+  const mobile = isMobile();
+  if (mobile !== lastMobile) { lastMobile = mobile; buildThumbs(); }
+  render();
+});
 
 buildThumbs();
 render();
