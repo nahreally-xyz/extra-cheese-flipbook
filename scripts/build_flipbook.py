@@ -165,10 +165,15 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     #header h1 { font-size: 1.5rem; letter-spacing: 2px; }
     #header .byline { font-size: 0.85rem; }
     #header .contributors { font-size: 0.65rem; }
-    #viewer { padding: 10px 6px 6px; gap: 6px; }
+    #viewer { padding: 10px 0 6px; gap: 0; position: relative; }
     #book { max-width: 100%; }
     .page-frame { max-width: 100%; box-shadow: 0 4px 16px rgba(0,0,0,0.5); border-radius: 2px; }
-    .nav-btn { width: 34px; height: 52px; font-size: 0.9rem; }
+    .nav-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 36px; height: 56px; font-size: 0.9rem; z-index: 10;
+    }
+    #prevBtn { left: 4px; }
+    #nextBtn { right: 4px; }
   }
 </style>
 </head>
