@@ -82,7 +82,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Extra Cheese — NAHreally</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
   body {
     background: #242424;
     font-family: 'Georgia', serif;
