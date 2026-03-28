@@ -212,7 +212,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 </div>
 <div id="thumb-strip"></div>
 <div style="width:100%;max-width:700px;margin:16px auto 0;padding:0 12px;">
-  <iframe style="border: 0; width: 100%; height: 472px;" src="https://bandcamp.com/EmbeddedPlayer/album=1340709460/size=large/bgcol=ffffff/linkcol=0687f5/artwork=none/transparent=true/" seamless><a href="https://threedollarpistol.com/album/extra-cheese">EXTRA CHEESE by NAHreally</a></iframe>
+  <iframe style="border: 0; width: 100%; height: 515px;" src="https://bandcamp.com/EmbeddedPlayer/album=1340709460/size=large/bgcol=ffffff/linkcol=0687f5/artwork=none/transparent=true/" seamless><a href="https://threedollarpistol.com/album/extra-cheese">EXTRA CHEESE by NAHreally</a></iframe>
 </div>
 <div style="width:100%;max-width:700px;margin:24px auto 0;padding:0 12px;text-align:center;">
   <p style="font-family:'Bookman Old Style','Bookman',Georgia,serif;font-style:italic;font-size:1.1rem;color:#aaa;margin-bottom:14px;">Print copies of the Extra Cheese booklet are available for $10 + shipping at the link below.</p>
