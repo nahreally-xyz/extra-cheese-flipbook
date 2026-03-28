@@ -160,7 +160,16 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   .thumb:hover { opacity: 0.85; }
   .thumb.active { border-color: #f0e040; opacity: 1; }
   .thumb img { width: 28px; display: block; }
-@media (max-width: 600px) { .page-frame { max-width: 47vw; } }
+  @media (max-width: 600px) {
+    #header { padding: 28px 16px 6px; }
+    #header h1 { font-size: 1.5rem; letter-spacing: 2px; }
+    #header .byline { font-size: 0.85rem; }
+    #header .contributors { font-size: 0.65rem; }
+    #viewer { padding: 10px 6px 6px; gap: 6px; }
+    #book { max-width: 100%; }
+    .page-frame { max-width: 100%; box-shadow: 0 4px 16px rgba(0,0,0,0.5); border-radius: 2px; }
+    .nav-btn { width: 34px; height: 52px; font-size: 0.9rem; }
+  }
 </style>
 </head>
 <body>
@@ -184,59 +193,100 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 PAGES_PLACEHOLDER
 
 const TOTAL_SPREADS = PAGES.length / 2;
+const TOTAL_PAGES = PAGES.length;
 let currentSpread = 0;
+let currentPage = 0;
 
-function getSpreadPages(s) { return [PAGES[s * 2], PAGES[s * 2 + 1]]; }
+function isMobile() { return window.innerWidth <= 600; }
 
 function render() {
   const book = document.getElementById('book');
   book.innerHTML = '';
-  const [left, right] = getSpreadPages(currentSpread);
 
-  const lf = document.createElement('div'); lf.className = 'page-frame';
-  const li = document.createElement('img');
-  li.src = 'data:image/jpeg;base64,' + left.src; li.alt = left.label;
-  lf.appendChild(li); book.appendChild(lf);
+  if (isMobile()) {
+    // Single page mode
+    const page = PAGES[currentPage];
+    const pf = document.createElement('div'); pf.className = 'page-frame';
+    const img = document.createElement('img');
+    img.src = 'data:image/jpeg;base64,' + page.src; img.alt = page.label;
+    pf.appendChild(img); book.appendChild(pf);
 
-  const spine = document.createElement('div'); spine.id = 'spine'; book.appendChild(spine);
+    document.getElementById('prevBtn').disabled = currentPage === 0;
+    document.getElementById('nextBtn').disabled = currentPage >= TOTAL_PAGES - 1;
 
-  const rf = document.createElement('div'); rf.className = 'page-frame';
-  const ri = document.createElement('img');
-  ri.src = 'data:image/jpeg;base64,' + right.src; ri.alt = right.label;
-  rf.appendChild(ri); book.appendChild(rf);
+    const spreadIdx = Math.floor(currentPage / 2);
+    document.querySelectorAll('.thumb').forEach((t, i) =>
+      t.classList.toggle('active', i === spreadIdx));
+    const at = document.querySelectorAll('.thumb')[spreadIdx];
+    if (at) at.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
-  document.getElementById('prevBtn').disabled = currentSpread === 0;
-  document.getElementById('nextBtn').disabled = currentSpread >= TOTAL_SPREADS - 1;
+  } else {
+    // Two-page spread mode
+    const [left, right] = [PAGES[currentSpread * 2], PAGES[currentSpread * 2 + 1]];
 
-  document.querySelectorAll('.thumb').forEach((t, i) =>
-    t.classList.toggle('active', i === currentSpread));
-  const at = document.querySelectorAll('.thumb')[currentSpread];
-  if (at) at.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    const lf = document.createElement('div'); lf.className = 'page-frame';
+    const li = document.createElement('img');
+    li.src = 'data:image/jpeg;base64,' + left.src; li.alt = left.label;
+    lf.appendChild(li); book.appendChild(lf);
+
+    const spine = document.createElement('div'); spine.id = 'spine'; book.appendChild(spine);
+
+    const rf = document.createElement('div'); rf.className = 'page-frame';
+    const ri = document.createElement('img');
+    ri.src = 'data:image/jpeg;base64,' + right.src; ri.alt = right.label;
+    rf.appendChild(ri); book.appendChild(rf);
+
+    document.getElementById('prevBtn').disabled = currentSpread === 0;
+    document.getElementById('nextBtn').disabled = currentSpread >= TOTAL_SPREADS - 1;
+
+    document.querySelectorAll('.thumb').forEach((t, i) =>
+      t.classList.toggle('active', i === currentSpread));
+    const at = document.querySelectorAll('.thumb')[currentSpread];
+    if (at) at.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
 }
 
 function navigate(dir) {
-  currentSpread = Math.max(0, Math.min(TOTAL_SPREADS - 1, currentSpread + dir));
+  if (isMobile()) {
+    currentPage = Math.max(0, Math.min(TOTAL_PAGES - 1, currentPage + dir));
+    currentSpread = Math.floor(currentPage / 2);
+  } else {
+    currentSpread = Math.max(0, Math.min(TOTAL_SPREADS - 1, currentSpread + dir));
+    currentPage = currentSpread * 2;
+  }
   render();
 }
 
 function buildThumbs() {
   const strip = document.getElementById('thumb-strip');
   for (let i = 0; i < TOTAL_SPREADS; i++) {
-    const [l, r] = getSpreadPages(i);
+    const [l, r] = [PAGES[i * 2], PAGES[i * 2 + 1]];
     const thumb = document.createElement('div');
     thumb.className = 'thumb' + (i === 0 ? ' active' : '');
     const li = document.createElement('img'); li.src = 'data:image/jpeg;base64,' + l.src;
     const ri = document.createElement('img'); ri.src = 'data:image/jpeg;base64,' + r.src;
     thumb.appendChild(li); thumb.appendChild(ri);
-    thumb.onclick = () => { currentSpread = i; render(); };
+    thumb.onclick = () => {
+      currentSpread = i; currentPage = i * 2; render();
+    };
     strip.appendChild(thumb);
   }
 }
+
+// Swipe support for mobile
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const delta = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(delta) > 50) navigate(delta < 0 ? 1 : -1);
+});
 
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
 });
+
+window.addEventListener('resize', render);
 
 buildThumbs();
 render();
