@@ -143,6 +143,20 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   }
   .nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.28); color: #fff; }
   .nav-btn:disabled { opacity: 0.15; cursor: default; }
+  #progress-wrap {
+    width: 100%; max-width: 920px; padding: 6px 12px 2px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  #progress-bar-track {
+    width: 100%; height: 2px; background: #444; border-radius: 2px; overflow: hidden;
+  }
+  #progress-bar-fill {
+    height: 100%; background: #ffe033; border-radius: 2px;
+    transition: width 0.2s ease;
+  }
+  #progress-label {
+    font-size: 0.65rem; color: #666; letter-spacing: 1px;
+  }
   #thumb-strip {
     display: flex; gap: 5px; overflow-x: auto;
     padding: 8px 12px 12px; max-width: 960px; width: 100%;
@@ -192,6 +206,10 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
   <div id="book"></div>
   <button class="nav-btn" id="nextBtn" onclick="navigate(1)">&#9654;</button>
 </div>
+<div id="progress-wrap">
+  <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+  <div id="progress-label"></div>
+</div>
 <div id="thumb-strip"></div>
 <div style="width:100%;max-width:700px;margin:16px auto 32px;padding:0 12px;">
   <iframe style="border: 0; width: 100%; height: 472px;" src="https://bandcamp.com/EmbeddedPlayer/album=1340709460/size=large/bgcol=ffffff/linkcol=0687f5/artwork=none/transparent=true/" seamless><a href="https://threedollarpistol.com/album/extra-cheese">EXTRA CHEESE by NAHreally</a></iframe>
@@ -221,6 +239,8 @@ function render() {
 
     document.getElementById('prevBtn').disabled = currentPage === 0;
     document.getElementById('nextBtn').disabled = currentPage >= TOTAL_PAGES - 1;
+    document.getElementById('progress-bar-fill').style.width = ((currentPage + 1) / TOTAL_PAGES * 100) + '%';
+    document.getElementById('progress-label').textContent = (currentPage + 1) + ' / ' + TOTAL_PAGES;
 
     document.querySelectorAll('.thumb').forEach((t, i) =>
       t.classList.toggle('active', i === currentPage));
@@ -245,6 +265,8 @@ function render() {
 
     document.getElementById('prevBtn').disabled = currentSpread === 0;
     document.getElementById('nextBtn').disabled = currentSpread >= TOTAL_SPREADS - 1;
+    document.getElementById('progress-bar-fill').style.width = ((currentSpread + 1) / TOTAL_SPREADS * 100) + '%';
+    document.getElementById('progress-label').textContent = (currentSpread + 1) + ' / ' + TOTAL_SPREADS;
 
     document.querySelectorAll('.thumb').forEach((t, i) =>
       t.classList.toggle('active', i === currentSpread));
